@@ -2,10 +2,11 @@
 #include <string>
 #include "SDL.h"
 #include "SDL_image.h"
+#include "CardDictionary.cpp"
 
 class Card {
 public:
-	Card(bool isFaceDown, int value, std::string name, std::string suit, SDL_Texture *cardImg);
+	Card(bool isFaceDown, int value, std::string name, std::string suit, SDL_Renderer* renderer);
 	void setIsFacingDown(const bool value);
 	bool getIsFacingDown();
 	void setSuit(const std::string &str);
@@ -15,6 +16,7 @@ public:
 	SDL_Texture* GetCardImg();
 
 private:
+	SDL_Renderer* m_renderer;
 	SDL_Texture* m_cardImg;
 	bool isFaceDown;
 	std::string m_suit;

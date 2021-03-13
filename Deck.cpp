@@ -1,7 +1,8 @@
 #pragma once
 #include "Deck.h"
 
-Deck::Deck() {
+Deck::Deck(SDL_Renderer* renderer) {
+	m_renderer = renderer;
 	createDeck();
 }
 
@@ -34,19 +35,19 @@ void Deck::removeCard(const int index) {
 void Deck::createDeck() {
 	deckList.clear();
 
-	Card ace(false, 1, "Ace", "Spades");
-	Card two(false, 2, "Two", "Spades");
-	Card three(false, 3, "Three", "Spades");
-	Card four(false, 4, "Four", "Spades");
-	Card five(false, 5, "Five", "Spades");
-	Card six(false, 6, "Six", "Spades");
-	Card seven(false, 7, "Seven", "Spades");
-	Card eight(false, 8, "Eight", "Spades");
-	Card nine(false, 9, "Nine", "Spades");
-	Card ten(false, 10, "Ten", "Spades");
-	Card jack(false, 10, "Jack", "Spades");
-	Card queen(false, 10, "Queen", "Spades");
-	Card king(false, 10, "King", "Spades");
+	Card ace(false, 1, "Ace", "Spades", m_renderer);
+	Card two(false, 2, "Two", "Spades", m_renderer);
+	Card three(false, 3, "Three", "Spades", m_renderer);
+	Card four(false, 4, "Four", "Spades", m_renderer);
+	Card five(false, 5, "Five", "Spades", m_renderer);
+	Card six(false, 6, "Six", "Spades", m_renderer);
+	Card seven(false, 7, "Seven", "Spades", m_renderer);
+	Card eight(false, 8, "Eight", "Spades", m_renderer);
+	Card nine(false, 9, "Nine", "Spades", m_renderer);
+	Card ten(false, 10, "Ten", "Spades", m_renderer);
+	Card jack(false, 10, "Jack", "Spades", m_renderer );
+	Card queen(false, 10, "Queen", "Spades", m_renderer);
+	Card king(false, 10, "King", "Spades", m_renderer);
 
 	for (size_t i{ 0 }; i < 4; ++i) {
 		std::string suitType;

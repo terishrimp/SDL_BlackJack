@@ -1,14 +1,13 @@
-#include "Card.h"
+#pragma once
+#include "SDL.h"
+#include "SDL_image.h"
+#include <string>
 
-
-
-static class CardDictionary {
-private:
-	const std::string cardFilePath{ "./Images/Cards/" };
+class CardDictionary {
 public:
-	SDL_Texture* GetCardImage(Card& card, SDL_Renderer* renderer) {
-		std::string filePath{ cardFilePath };
-		filePath += card.getName() + "Of" + card.getSuit() + ".png";
+	static SDL_Texture* GetCardImage(std::string name, std::string suit, SDL_Renderer* renderer) {
+		std::string filePath{ "./Images/Cards/" };
+		filePath += name + "Of" + suit + ".png";
 		return IMG_LoadTexture(renderer, filePath.c_str());
 	}
 };

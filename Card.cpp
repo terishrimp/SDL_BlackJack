@@ -1,12 +1,13 @@
 #pragma once
 #include "Card.h"
 
-Card::Card(bool isFaceDown, int m_value, std::string name, std::string suit, SDL_Texture *cardImg) {
+Card::Card(bool isFaceDown, int m_value, std::string name, std::string suit, SDL_Renderer * renderer) {
 	Card::isFaceDown = isFaceDown;
 	Card::m_value = m_value;
 	Card::m_name = name;
 	Card::m_suit = suit;
-	Card::m_cardImg = cardImg;
+	Card::m_renderer = renderer;
+	Card::m_cardImg = CardDictionary::GetCardImage(m_name, m_suit, renderer);
 }
 
 bool Card::getIsFacingDown() {

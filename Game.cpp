@@ -1,6 +1,12 @@
 #include "Game.h"
 
-Game::Game(Player player, Dealer dealer, Deck deck) : m_player{ player }, m_dealer{ dealer }, m_deck{ deck }{
+Game::Game(Player player, Dealer dealer, Deck deck, SDL_Renderer* renderer, SDL_Window* window)
+	: m_player{ player }, m_dealer{ dealer }, m_deck{ deck }{
+	Game::m_renderer = renderer;
+	Game::m_window = window;
+	Game::m_gameBg = IMG_LoadTexture(m_renderer, m_gameBgString.c_str());
+	Game::m_mousePointer = IMG_LoadTexture(m_renderer, m_mousePointerString.c_str());
+	SDL_GetWindowSize(window, &m_windowWidth, &m_windowHeight);
 }
 
 void Game::setBet(float m_value) {
@@ -32,8 +38,8 @@ bool Game::checkValidInput(const char& playerInput, const char charPtr[], const 
 
 
 void Game::start() {
-	askForInitialBalance();
-	askForBetValue();
+	//askForInitialBalance();
+	//askForBetValue();
 	m_deck.shuffleCardList();
 	createHands();
 	displayAllHands();
@@ -346,98 +352,157 @@ void Game::payout(const std::vector <Card> hand, std::string handName, bool repl
 	std::cout << std::endl;
 }
 void Game::loop() {
-	//ask user for input until they stand or lose
-	while (!gameHasCompleted) {
-		//player natural
-		if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21) {
-			std::cout << "\nYou have a natural, you win!" << std::endl;
-			m_player.setUserBalance(m_player.getUserBalance() + m_betValue * 2.5f);
-			if (askForReplay()) {
-				reset();
-				continue;
+	while (m_cEvent.type != SDL_QUIT) {
+		while (SDL_PollEvent(&m_cEvent)) {
+			SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
+			SDL_RenderClear(m_renderer);
+			SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+			if (m_cGameScene == GameScene::START) {
+				displayStartScreen();
 			}
+			else if (m_cGameScene == GameScene::GAME) {
+				//actual game loop
+			}
+
+			SDL_RenderPresent(m_renderer);
+
 		}
-		//dealer natural
-		else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
-			std::cout << "\nThe dealer has a natural, you lose." << std::endl;
-			m_dealer.setUserBalance(m_dealer.getUserBalance() + m_betValue);
-			if (askForReplay()) {
-				reset();
-				continue;
-			}
-		}
-		//tie
-		else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
-			std::cout << "\nThe game is a tie, game will reset." << std::endl;
-			if (askForReplay()) {
-				reset();
-				continue;
-			}
-		}
-		//play game
-		else {
-			//play regular hand
-			while (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
-
-				if (turnCount <= 0) {
-					firstTurn();
-				}
-				else {
-					turn();
-				}
-				turnCount++;
-			}
-
-			//check for split
-			turnCount = 0;
-			if (m_player.getIsSplit()) {
-				//play split hand
-				m_player.setIsStanding(false);
-				//display hand
-				std::cout << "\nWe will now look at this hand: " << std::endl;
-				m_player.displayHand(m_player.getSplitCards());
-				m_player.displayHandValue(m_player.getSplitCards());
-				std::cout << std::endl;
-				while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
-
-					if (turnCount <= 0) {
-						firstTurn(true);
-					}
-					else {
-						turn(true);
-					}
-					turnCount++;
-				}
-			}
-
-			//dealer will hit until their hand sum is above 17
-			while (User::checkHandValue(m_dealer.getCards()) <= 17) {
-				m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
-			}
-
-			//reveal all cards
-			for (size_t i{ 0 }; i < m_dealer.getCards().size(); ++i) {
-				m_dealer.getCards()[i].setIsFacingDown(false);
-			}
-
-			//display their hand
-			m_dealer.displayHand(m_dealer.getCards());
-			m_dealer.displayHandValue(m_dealer.getCards());
-		}
-		std::cout << std::endl;
-
-		//activate payouts
-		if (m_player.getIsSplit()) {
-			payout(m_player.getSplitCards(), "split", false);
-		}
-		payout(m_player.getCards(), "original");
-
-		//end game if player has no more money
-		if (m_player.getUserBalance() <= 0) {
-			std::cout << "Your balance has run out. Game Over." << std::endl;
-			break;
-		}
-
-
 	}
+	////ask user for input until they stand or lose
+	//while (!gameHasCompleted) {
+	//	//player natural
+	//	if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21) {
+	//		std::cout << "\nYou have a natural, you win!" << std::endl;
+	//		m_player.setUserBalance(m_player.getUserBalance() + m_betValue * 2.5f);
+	//		if (askForReplay()) {
+	//			reset();
+	//			continue;
+	//		}
+	//	}
+	//	//dealer natural
+	//	else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
+	//		std::cout << "\nThe dealer has a natural, you lose." << std::endl;
+	//		m_dealer.setUserBalance(m_dealer.getUserBalance() + m_betValue);
+	//		if (askForReplay()) {
+	//			reset();
+	//			continue;
+	//		}
+	//	}
+	//	//tie
+	//	else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
+	//		std::cout << "\nThe game is a tie, game will reset." << std::endl;
+	//		if (askForReplay()) {
+	//			reset();
+	//			continue;
+	//		}
+	//	}
+	//	//play game
+	//	else {
+	//		//play regular hand
+	//		while (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
+
+	//			if (turnCount <= 0) {
+	//				firstTurn();
+	//			}
+	//			else {
+	//				turn();
+	//			}
+	//			turnCount++;
+	//		}
+
+	//		//check for split
+	//		turnCount = 0;
+	//		if (m_player.getIsSplit()) {
+	//			//play split hand
+	//			m_player.setIsStanding(false);
+	//			//display hand
+	//			std::cout << "\nWe will now look at this hand: " << std::endl;
+	//			m_player.displayHand(m_player.getSplitCards());
+	//			m_player.displayHandValue(m_player.getSplitCards());
+	//			std::cout << std::endl;
+	//			while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
+
+	//				if (turnCount <= 0) {
+	//					firstTurn(true);
+	//				}
+	//				else {
+	//					turn(true);
+	//				}
+	//				turnCount++;
+	//			}
+	//		}
+
+	//		//dealer will hit until their hand sum is above 17
+	//		while (User::checkHandValue(m_dealer.getCards()) <= 17) {
+	//			m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
+	//		}
+
+	//		//reveal all cards
+	//		for (size_t i{ 0 }; i < m_dealer.getCards().size(); ++i) {
+	//			m_dealer.getCards()[i].setIsFacingDown(false);
+	//		}
+
+	//		//display their hand
+	//		m_dealer.displayHand(m_dealer.getCards());
+	//		m_dealer.displayHandValue(m_dealer.getCards());
+	//	}
+	//	std::cout << std::endl;
+
+	//	//activate payouts
+	//	if (m_player.getIsSplit()) {
+	//		payout(m_player.getSplitCards(), "split", false);
+	//	}
+	//	payout(m_player.getCards(), "original");
+
+	//	//end game if player has no more money
+	//	if (m_player.getUserBalance() <= 0) {
+	//		std::cout << "Your balance has run out. Game Over." << std::endl;
+	//		break;
+	//	}
+	//}
+}
+
+void Game::displayStartScreen() {
+	SDL_Texture* titleText = Helper::TTFtoTexture(m_renderer, m_largeFont, "BlackJack", Helper::colorWhite);
+	SDL_Rect titleRect = Helper::TextRect(m_largeFont, "BlackJack");
+	titleRect.x = m_windowWidth / 2 - titleRect.w / 2;
+	titleRect.y = m_windowHeight * 0.25;
+	SDL_RenderCopy(m_renderer, titleText, NULL, &titleRect);
+
+	SDL_Texture* startGameText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorWhite);
+	SDL_Texture* startGameTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorGrey);
+	SDL_Rect startGameRect = Helper::TextRect(m_mediumFont, "Start Game");
+	startGameRect.x = m_windowWidth / 2 - startGameRect.w / 2;
+	startGameRect.y = m_windowHeight / 2 - startGameRect.h / 2;
+
+	SDL_Texture* quitText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorWhite);
+	SDL_Texture* quitTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorGrey);
+	SDL_Rect quitRect = Helper::TextRect(m_mediumFont, "Quit");
+	quitRect.x = m_windowWidth / 2 - quitRect.w / 2;
+	quitRect.y = m_windowHeight * .75 - quitRect.h / 2;
+
+	if (SDL_PointInRect(&m_mousePoint, &startGameRect)) {
+		SDL_RenderCopy(m_renderer, startGameTextSelected, NULL, &startGameRect);
+		if (m_cEvent.type == SDL_MOUSEBUTTONDOWN)
+			m_cGameScene = GameScene::GAME;
+	}
+	else
+		SDL_RenderCopy(m_renderer, startGameText, NULL, &startGameRect);
+
+	if (SDL_PointInRect(&m_mousePoint, &quitRect)) {
+		SDL_RenderCopy(m_renderer, quitTextSelected, NULL, &quitRect);
+		if (m_cEvent.type == SDL_MOUSEBUTTONDOWN)
+			SDL_Quit();
+	}
+	else
+		SDL_RenderCopy(m_renderer, quitText, NULL, &quitRect);
+}
+
+
+void Game::quit() {
+	std::cout << "Everything's A-OK!" << std::endl;
+	SDL_DestroyRenderer(m_renderer);
+	SDL_DestroyWindow(m_window);
+	TTF_Quit();
+	atexit(SDL_Quit);
 }

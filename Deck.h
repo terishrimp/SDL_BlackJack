@@ -5,14 +5,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Card.h"
-
+#include "SDL.h"
 class Deck {
 private:
 	void removeCard(const int index);
 	std::vector <Card> deckList;
-
+	SDL_Renderer* m_renderer;
 public:
-	Deck();
+	Deck(SDL_Renderer* renderer);
 	void createDeck();
 	Card takeCardFromFront();
 	std::vector<Card> getDeckList();
