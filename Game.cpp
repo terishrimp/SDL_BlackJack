@@ -352,16 +352,21 @@ void Game::payout(const std::vector <Card> hand, std::string handName, bool repl
 	std::cout << std::endl;
 }
 void Game::loop() {
+	SDL_ShowCursor(SDL_DISABLE);
+
 	while (m_cEvent.type != SDL_QUIT) {
 		while (SDL_PollEvent(&m_cEvent)) {
 			SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
 			SDL_RenderClear(m_renderer);
+			SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
 			SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+			SDL_RenderCopy(m_renderer, m_mousePointer, NULL, &mousePointerRect);
 			if (m_cGameScene == GameScene::START) {
 				displayStartScreen();
 			}
 			else if (m_cGameScene == GameScene::GAME) {
 				//actual game loop
+				start();
 			}
 
 			SDL_RenderPresent(m_renderer);
@@ -465,21 +470,28 @@ void Game::loop() {
 void Game::displayStartScreen() {
 	SDL_Texture* titleText = Helper::TTFtoTexture(m_renderer, m_largeFont, "BlackJack", Helper::colorWhite);
 	SDL_Rect titleRect = Helper::TextRect(m_largeFont, "BlackJack");
-	titleRect.x = m_windowWidth / 2 - titleRect.w / 2;
-	titleRect.y = m_windowHeight * 0.25;
+	titleRect.x = m_windowWidth * .5 - titleRect.w * .5;
+	titleRect.y = m_windowHeight * .25;
+	//SDL_Texture* titleText = IMG_LoadTexture(m_renderer, "./Images/BlackJackTitle.png");
+	//SDL_Rect titleRect;
+	//SDL_QueryTexture(titleText, NULL, NULL, &titleRect.x, &titleRect.y);
+	//titleRect.w = titleRect.x/2;
+	//titleRect.h = titleRect.y/2;
+	//titleRect.x = m_windowWidth / 2 - titleRect.w / 2;
+	//titleRect.y = m_windowHeight / 4 - titleRect.h / 2;
 	SDL_RenderCopy(m_renderer, titleText, NULL, &titleRect);
 
 	SDL_Texture* startGameText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorWhite);
 	SDL_Texture* startGameTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorGrey);
 	SDL_Rect startGameRect = Helper::TextRect(m_mediumFont, "Start Game");
-	startGameRect.x = m_windowWidth / 2 - startGameRect.w / 2;
-	startGameRect.y = m_windowHeight / 2 - startGameRect.h / 2;
+	startGameRect.x = m_windowWidth * .5- startGameRect.w * .5;
+	startGameRect.y = m_windowHeight * .5- startGameRect.h * .5;
 
 	SDL_Texture* quitText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorWhite);
 	SDL_Texture* quitTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorGrey);
 	SDL_Rect quitRect = Helper::TextRect(m_mediumFont, "Quit");
-	quitRect.x = m_windowWidth / 2 - quitRect.w / 2;
-	quitRect.y = m_windowHeight * .75 - quitRect.h / 2;
+	quitRect.x = m_windowWidth * .5- quitRect.w * .5;
+	quitRect.y = m_windowHeight * .6 - quitRect.h * .5;
 
 	if (SDL_PointInRect(&m_mousePoint, &startGameRect)) {
 		SDL_RenderCopy(m_renderer, startGameTextSelected, NULL, &startGameRect);
