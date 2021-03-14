@@ -1,20 +1,26 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include "Helper.h"
 #include "Card.h"
-
+#include "SDL.h"
+#include "SDL_image.h"
 class User {
 protected:
 	float m_Balance{ 0 };
 	std::string m_name;
 	std::vector <Card> m_handCards;
 	bool m_isStanding{ false };
+	SDL_Point *m_origin;
+	SDL_Renderer* m_renderer;
+	const int cardXOffset = 60;
+
 
 public:	
 	float getUserBalance();
 	void setUserBalance(float m_value);
 
-	User(std::string name);
+	User(std::string name, SDL_Point *origin, SDL_Renderer *renderer);
 	std::vector<Card>& getCards();
 	virtual void clearHands();
 	void addCardToHand(std::vector<Card> * const handToAddTo, const Card cardToAdd);

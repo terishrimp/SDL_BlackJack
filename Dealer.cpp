@@ -1,5 +1,4 @@
 #pragma once
 #include "Dealer.h"
 
-Dealer::Dealer() : User("house") {}
-Dealer::Dealer(std::string name) : User(name) {}
+Dealer::Dealer(std::string name, SDL_Point *origin, SDL_Renderer *renderer) : User(name, origin, renderer) {}

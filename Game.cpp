@@ -86,7 +86,7 @@ void Game::askForBetValue() {
 
 void Game::displayAllHands() {
 	m_player.displayHand(m_player.getCards());
-	m_player.displayHandValue(m_player.getCards());
+	//m_player.displayHandValue(m_player.getCards());
 
 	m_dealer.displayHand(m_dealer.getCards());
 
@@ -355,116 +355,120 @@ void Game::loop() {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	while (m_cEvent.type != SDL_QUIT) {
-		while (SDL_PollEvent(&m_cEvent)) {
-			SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
-			SDL_RenderClear(m_renderer);
-			SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
-			SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
-			SDL_RenderCopy(m_renderer, m_mousePointer, NULL, &mousePointerRect);
-			if (m_cGameScene == GameScene::START) {
-				displayStartScreen();
-			}
-			else if (m_cGameScene == GameScene::GAME) {
-				//actual game loop
-				start();
-			}
+		SDL_PollEvent(&m_cEvent);
 
-			SDL_RenderPresent(m_renderer);
+		SDL_RenderClear(m_renderer);
+		SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+		SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
+		SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
+
+
+		if (m_cGameScene == GameScene::START) {
+			displayStartScreen();
+		}
+		else if (m_cGameScene == GameScene::GAME) {
+			//actual game loop
+			displayAllHands();
+			//displayOptions();
 
 		}
+
+		SDL_RenderCopy(m_renderer, m_mousePointer, NULL, &mousePointerRect);
+		SDL_RenderPresent(m_renderer);
 	}
-	////ask user for input until they stand or lose
-	//while (!gameHasCompleted) {
-	//	//player natural
-	//	if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21) {
-	//		std::cout << "\nYou have a natural, you win!" << std::endl;
-	//		m_player.setUserBalance(m_player.getUserBalance() + m_betValue * 2.5f);
-	//		if (askForReplay()) {
-	//			reset();
-	//			continue;
-	//		}
-	//	}
-	//	//dealer natural
-	//	else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
-	//		std::cout << "\nThe dealer has a natural, you lose." << std::endl;
-	//		m_dealer.setUserBalance(m_dealer.getUserBalance() + m_betValue);
-	//		if (askForReplay()) {
-	//			reset();
-	//			continue;
-	//		}
-	//	}
-	//	//tie
-	//	else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
-	//		std::cout << "\nThe game is a tie, game will reset." << std::endl;
-	//		if (askForReplay()) {
-	//			reset();
-	//			continue;
-	//		}
-	//	}
-	//	//play game
-	//	else {
-	//		//play regular hand
-	//		while (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
 
-	//			if (turnCount <= 0) {
-	//				firstTurn();
-	//			}
-	//			else {
-	//				turn();
-	//			}
-	//			turnCount++;
-	//		}
+////ask user for input until they stand or lose
+//while (!gameHasCompleted) {
+//	//player natural
+//	if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21) {
+//		std::cout << "\nYou have a natural, you win!" << std::endl;
+//		m_player.setUserBalance(m_player.getUserBalance() + m_betValue * 2.5f);
+//		if (askForReplay()) {
+//			reset();
+//			continue;
+//		}
+//	}
+//	//dealer natural
+//	else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
+//		std::cout << "\nThe dealer has a natural, you lose." << std::endl;
+//		m_dealer.setUserBalance(m_dealer.getUserBalance() + m_betValue);
+//		if (askForReplay()) {
+//			reset();
+//			continue;
+//		}
+//	}
+//	//tie
+//	else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21) {
+//		std::cout << "\nThe game is a tie, game will reset." << std::endl;
+//		if (askForReplay()) {
+//			reset();
+//			continue;
+//		}
+//	}
+//	//play game
+//	else {
+//		//play regular hand
+//		while (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
 
-	//		//check for split
-	//		turnCount = 0;
-	//		if (m_player.getIsSplit()) {
-	//			//play split hand
-	//			m_player.setIsStanding(false);
-	//			//display hand
-	//			std::cout << "\nWe will now look at this hand: " << std::endl;
-	//			m_player.displayHand(m_player.getSplitCards());
-	//			m_player.displayHandValue(m_player.getSplitCards());
-	//			std::cout << std::endl;
-	//			while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
+//			if (turnCount <= 0) {
+//				firstTurn();
+//			}
+//			else {
+//				turn();
+//			}
+//			turnCount++;
+//		}
 
-	//				if (turnCount <= 0) {
-	//					firstTurn(true);
-	//				}
-	//				else {
-	//					turn(true);
-	//				}
-	//				turnCount++;
-	//			}
-	//		}
+//		//check for split
+//		turnCount = 0;
+//		if (m_player.getIsSplit()) {
+//			//play split hand
+//			m_player.setIsStanding(false);
+//			//display hand
+//			std::cout << "\nWe will now look at this hand: " << std::endl;
+//			m_player.displayHand(m_player.getSplitCards());
+//			m_player.displayHandValue(m_player.getSplitCards());
+//			std::cout << std::endl;
+//			while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
 
-	//		//dealer will hit until their hand sum is above 17
-	//		while (User::checkHandValue(m_dealer.getCards()) <= 17) {
-	//			m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
-	//		}
+//				if (turnCount <= 0) {
+//					firstTurn(true);
+//				}
+//				else {
+//					turn(true);
+//				}
+//				turnCount++;
+//			}
+//		}
 
-	//		//reveal all cards
-	//		for (size_t i{ 0 }; i < m_dealer.getCards().size(); ++i) {
-	//			m_dealer.getCards()[i].setIsFacingDown(false);
-	//		}
+//		//dealer will hit until their hand sum is above 17
+//		while (User::checkHandValue(m_dealer.getCards()) <= 17) {
+//			m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
+//		}
 
-	//		//display their hand
-	//		m_dealer.displayHand(m_dealer.getCards());
-	//		m_dealer.displayHandValue(m_dealer.getCards());
-	//	}
-	//	std::cout << std::endl;
+//		//reveal all cards
+//		for (size_t i{ 0 }; i < m_dealer.getCards().size(); ++i) {
+//			m_dealer.getCards()[i].setIsFacingDown(false);
+//		}
 
-	//	//activate payouts
-	//	if (m_player.getIsSplit()) {
-	//		payout(m_player.getSplitCards(), "split", false);
-	//	}
-	//	payout(m_player.getCards(), "original");
+//		//display their hand
+//		m_dealer.displayHand(m_dealer.getCards());
+//		m_dealer.displayHandValue(m_dealer.getCards());
+//	}
+//	std::cout << std::endl;
 
-	//	//end game if player has no more money
-	//	if (m_player.getUserBalance() <= 0) {
-	//		std::cout << "Your balance has run out. Game Over." << std::endl;
-	//		break;
-	//	}
-	//}
+//	//activate payouts
+//	if (m_player.getIsSplit()) {
+//		payout(m_player.getSplitCards(), "split", false);
+//	}
+//	payout(m_player.getCards(), "original");
+
+//	//end game if player has no more money
+//	if (m_player.getUserBalance() <= 0) {
+//		std::cout << "Your balance has run out. Game Over." << std::endl;
+//		break;
+//	}
+//}
 }
 
 void Game::displayStartScreen() {
@@ -472,31 +476,28 @@ void Game::displayStartScreen() {
 	SDL_Rect titleRect = Helper::TextRect(m_largeFont, "BlackJack");
 	titleRect.x = m_windowWidth * .5 - titleRect.w * .5;
 	titleRect.y = m_windowHeight * .25;
-	//SDL_Texture* titleText = IMG_LoadTexture(m_renderer, "./Images/BlackJackTitle.png");
-	//SDL_Rect titleRect;
-	//SDL_QueryTexture(titleText, NULL, NULL, &titleRect.x, &titleRect.y);
-	//titleRect.w = titleRect.x/2;
-	//titleRect.h = titleRect.y/2;
-	//titleRect.x = m_windowWidth / 2 - titleRect.w / 2;
-	//titleRect.y = m_windowHeight / 4 - titleRect.h / 2;
 	SDL_RenderCopy(m_renderer, titleText, NULL, &titleRect);
 
 	SDL_Texture* startGameText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorWhite);
 	SDL_Texture* startGameTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Start Game", Helper::colorGrey);
 	SDL_Rect startGameRect = Helper::TextRect(m_mediumFont, "Start Game");
-	startGameRect.x = m_windowWidth * .5- startGameRect.w * .5;
-	startGameRect.y = m_windowHeight * .5- startGameRect.h * .5;
+	startGameRect.x = m_windowWidth * .5 - startGameRect.w * .5;
+	startGameRect.y = m_windowHeight * .5 - startGameRect.h * .5;
 
 	SDL_Texture* quitText = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorWhite);
 	SDL_Texture* quitTextSelected = Helper::TTFtoTexture(m_renderer, m_mediumFont, "Quit", Helper::colorGrey);
 	SDL_Rect quitRect = Helper::TextRect(m_mediumFont, "Quit");
-	quitRect.x = m_windowWidth * .5- quitRect.w * .5;
+	quitRect.x = m_windowWidth * .5 - quitRect.w * .5;
 	quitRect.y = m_windowHeight * .6 - quitRect.h * .5;
 
 	if (SDL_PointInRect(&m_mousePoint, &startGameRect)) {
 		SDL_RenderCopy(m_renderer, startGameTextSelected, NULL, &startGameRect);
-		if (m_cEvent.type == SDL_MOUSEBUTTONDOWN)
+		if (m_cEvent.type == SDL_MOUSEBUTTONDOWN) {
+			start();
 			m_cGameScene = GameScene::GAME;
+
+
+		}
 	}
 	else
 		SDL_RenderCopy(m_renderer, startGameText, NULL, &startGameRect);
@@ -508,6 +509,8 @@ void Game::displayStartScreen() {
 	}
 	else
 		SDL_RenderCopy(m_renderer, quitText, NULL, &quitRect);
+
+	SDL_RenderPresent(m_renderer);
 }
 
 

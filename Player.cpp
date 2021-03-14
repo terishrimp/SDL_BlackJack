@@ -1,7 +1,7 @@
 #pragma once
 #include "Player.h"
 
-Player::Player(std::string name) : User(name) {}
+Player::Player(std::string name, SDL_Point *origin, SDL_Renderer *renderer) : User(name, origin, renderer) {}
 
 std::vector <Card>& Player::getSplitCards() {
 	return m_splitHandCards;

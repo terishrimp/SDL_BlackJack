@@ -13,7 +13,7 @@ public:
 	std::string getSuit();
 	int getValue();
 	std::string getName();
-	SDL_Texture* GetCardImg();
+	SDL_Texture* getCardImg();
 
 private:
 	SDL_Renderer* m_renderer;

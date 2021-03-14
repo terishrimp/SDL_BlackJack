@@ -44,6 +44,6 @@ std::string Card::getSuit() {
 	return m_suit;
 }
 
-SDL_Texture* Card::GetCardImg() {
+SDL_Texture* Card::getCardImg() {
 	return m_cardImg;
 }

@@ -2,8 +2,6 @@
 #include "User.h"
 
 class Dealer : public User {
-	std::string m_name = "House";
 public:
-	Dealer();
-	Dealer(std::string name);
+	Dealer(std::string name, SDL_Point *m_origin, SDL_Renderer *renderer);
 };
