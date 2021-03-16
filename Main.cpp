@@ -27,8 +27,8 @@ int main(int argv, char** argc) {
 		SDL_RENDERER_PRESENTVSYNC);
 	Helper::CheckError(ren);
 
-	Player player("player", new SDL_Point{ 100,222 }, ren);
-	Dealer dealer("house", new SDL_Point{ 296,222 }, ren);
+	Player player("player", SDL_Point{ 100,100 }, ren);
+	Dealer dealer("house", SDL_Point{ 296,100 }, ren);
 	Deck deck(ren);
 	Game game(player, dealer, deck, ren, win);
 	game.loop();

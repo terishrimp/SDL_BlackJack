@@ -7,20 +7,21 @@
 #include "SDL_image.h"
 class User {
 protected:
-	float m_Balance{ 0 };
+	unsigned int m_Balance{ 0 };
 	std::string m_name;
 	std::vector <Card> m_handCards;
 	bool m_isStanding{ false };
-	SDL_Point *m_origin;
+	SDL_Point m_origin;
 	SDL_Renderer* m_renderer;
-	const int cardXOffset = 60;
-
+	const int cardXOffset = 30;
+	const int cardYOffset = 30;
+	const Uint8 cardColumnLength = 4;
 
 public:	
-	float getUserBalance();
-	void setUserBalance(float m_value);
+	unsigned int getUserBalance();
+	void setUserBalance(unsigned int m_value);
 
-	User(std::string name, SDL_Point *origin, SDL_Renderer *renderer);
+	User(std::string name, SDL_Point origin, SDL_Renderer *renderer);
 	std::vector<Card>& getCards();
 	virtual void clearHands();
 	void addCardToHand(std::vector<Card> * const handToAddTo, const Card cardToAdd);

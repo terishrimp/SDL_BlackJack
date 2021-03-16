@@ -1,7 +1,7 @@
 #pragma once
 #include "Player.h"
 
-Player::Player(std::string name, SDL_Point *origin, SDL_Renderer *renderer) : User(name, origin, renderer) {}
+Player::Player(std::string name, SDL_Point origin, SDL_Renderer *renderer) : User(name, origin, renderer) {}
 
 std::vector <Card>& Player::getSplitCards() {
 	return m_splitHandCards;
@@ -29,4 +29,17 @@ void Player::split() {
 
 void Player::setIsSplit(bool value) {
 	m_isSplit = value;
+}
+
+bool Player::getCanSurrender() {
+	return m_canSurrender;
+}
+void Player::setCanSurrender(bool value) {
+	m_canSurrender = value;
+}
+bool Player::getCanSplit() {
+	return m_canSplit;
+}
+void Player::setCanSplit(bool value) {
+	m_canSplit = value;
 }

@@ -1,7 +1,8 @@
 #pragma once
 #include "User.h"
 #include <algorithm>
-User::User(std::string name, SDL_Point* origin, SDL_Renderer* renderer) {
+#include <math.h>
+User::User(std::string name, SDL_Point origin, SDL_Renderer* renderer) {
 	User::m_name = name;
 	User::m_origin = origin;
 	User::m_renderer = renderer;
@@ -21,11 +22,11 @@ void User::clearHands() {
 }
 
 
-float User::getUserBalance() {
+unsigned int User::getUserBalance() {
 	return m_Balance;
 }
 
-void User::setUserBalance(float m_value) {
+void User::setUserBalance(unsigned int m_value) {
 	m_Balance = m_value;
 }
 int User::checkHandValue(const std::vector <Card>& handToCheck) {
@@ -52,12 +53,9 @@ void User::displayHandValue(const std::vector <Card>& handToDisplayValue) {
 
 void User::displayHand(std::vector <Card>& handToDisplay) {
 	for (size_t i{ 0 }; i < handToDisplay.size(); i++) {
-		/* to make cards appear on grid use mod:
-		Helper::getOffsetRect(m_origin->x + cardXOffset * ((max column size - current index) % max column size* i))
-		,m_origin->y + ceil(handToDisplay.size() / max column size - 1) * cardYOffset,
+		SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
+		,m_origin.y + cardYOffset * floor(i/cardColumnLength),
 		handToDisplay[i].getCardImg());
-		*/
-		SDL_Rect cardRect = Helper::getOffsetRect(m_origin->x + cardXOffset * i, m_origin->y, handToDisplay[i].getCardImg());
 		SDL_RenderCopy(m_renderer, handToDisplay[i].getCardImg(), NULL, &cardRect);
 	}
 

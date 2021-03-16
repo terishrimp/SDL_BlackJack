@@ -1,8 +1,5 @@
 #include "Helper.h"
 
-const SDL_Color Helper::colorWhite = { 255,255,255,255 };
-const SDL_Color Helper::colorGrey{ 127,127,127,255 };
-
 SDL_Rect Helper::getOffsetRect(const int x, const int y, SDL_Texture* tex) {
 	SDL_Rect tempRect{ NULL };
 	tempRect.x = x;

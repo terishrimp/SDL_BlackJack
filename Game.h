@@ -3,15 +3,21 @@
 #include "Player.h"
 #include "Dealer.h"
 #include "Deck.h"
+#include "TextTexture.h"
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include <string>
 
 enum class GameScene {
 	START,
-	GAME,
+	BALANCECHECK,
+	BETCHECK,
+	GAMELOOP,
 	END
 };
+
+
 
 class Game {
 public:
@@ -20,42 +26,39 @@ public:
 	void start();
 	void quit();
 private:
-	void displayStartScreen();
-	void setBet(float m_value);
-	void firstTurn(const bool splitHand = false);
-	void turn(const bool splitHand = false);
-	float getBet();
+	const SDL_Color white = SDL_Color{ 255,255,255,255 };
+	const SDL_Color grey = SDL_Color{ 128,128,128,255 };
+	void startScreen();
 	void addCardToPlayerHand(User& player);
-	bool checkValidInput(const char& playerInput, const char charPtr[], const size_t arraySize);
-	void activateMove(const char playerInput, Player& player, const bool firstTurn = false, const bool forSplit = false);
-	bool askForReplay();
+	bool checkValidInput(PlayerAction action, PlayerAction actionList[], const size_t arraySize);
+	void activateMove(PlayerAction action, Player& player, const bool forSplit = false);
+	void askForReplay(unsigned int balance);
 	void reset();
 	void askForInitialBalance();
 	void askForBetValue();
 	void displayAllHands();
 	void createHands();
 	void payout(const std::vector <Card> hand, std::string handName, bool replay = true);
-
-	char playerInput{ ' ' };
+	void displayTurnOptions(const bool splitHand = false);
 	unsigned int turnCount{ 0 };
 	Player m_player;
 	Dealer m_dealer;
 	Deck m_deck;
 	int m_windowWidth;
 	int m_windowHeight;
-	float m_betValue{ 0 };
+	unsigned int m_betValue{ 0 };
 	bool gameHasStarted = false;
 	bool gameHasCompleted = false;
 	GameScene m_cGameScene = GameScene::START;
 	SDL_Renderer* m_renderer;
 	SDL_Window* m_window;
-	SDL_Event m_cEvent{ NULL };
+	SDL_Event m_event{ NULL };
 	SDL_Point m_mousePoint{ NULL };
 	SDL_Texture* m_gameBg;
 	SDL_Texture* m_mousePointer;
-	TTF_Font* m_smallFont = TTF_OpenFont("./FOnts/8-bit-pusab.ttf", 6);
-	TTF_Font* m_mediumFont = TTF_OpenFont("./FOnts/8-bit-pusab.ttf", 12);
-	TTF_Font* m_largeFont = TTF_OpenFont("./FOnts/8-bit-pusab.ttf", 18);
+	TTF_Font* m_smallFont = TTF_OpenFont("./Fonts/slkscre.ttf", 10);
+	TTF_Font* m_mediumFont = TTF_OpenFont("./Fonts/slkscre.ttf", 16);
+	TTF_Font* m_largeFont = TTF_OpenFont("./Fonts/slkscre.ttf", 24);
 	const std::string m_mousePointerString = "./Images/Pointer.png";
 	const std::string m_gameBgString = "./Images/Board.png";
 };

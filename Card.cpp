@@ -7,7 +7,10 @@ Card::Card(bool isFaceDown, int m_value, std::string name, std::string suit, SDL
 	Card::m_name = name;
 	Card::m_suit = suit;
 	Card::m_renderer = renderer;
-	Card::m_cardImg = CardDictionary::GetCardImage(m_name, m_suit, renderer);
+	if (!isFaceDown)
+		Card::m_cardImg = CardDictionary::GetCardImage(m_name, m_suit, renderer);
+	else
+		Card::m_cardImg = IMG_LoadTexture(m_renderer, "./Images/Cards/CardFaceDown.png");
 }
 
 bool Card::getIsFacingDown() {
@@ -24,6 +27,10 @@ std::string Card::getName() {
 
 void Card::setIsFacingDown(const bool m_value) {
 	isFaceDown = m_value;
+	if (!isFaceDown)
+		Card::m_cardImg = CardDictionary::GetCardImage(m_name, m_suit, m_renderer);
+	else
+		Card::m_cardImg = IMG_LoadTexture(m_renderer, "./Images/Cards/CardFaceDown.png");
 }
 
 void Card::setSuit(const std::string& str) {

@@ -4,11 +4,8 @@
 #include "SDL_ttf.h"
 #include <iostream>
 #include <cstdlib>
-static class Helper {
+class Helper {
 public:
-	static const SDL_Color colorWhite;
-	static const SDL_Color colorGrey;
-
 	template <typename T>
 	static int CheckError(const T toCheck) {
 		if (!toCheck) {
