@@ -54,7 +54,7 @@ void User::displayHandValue(const std::vector <Card>& handToDisplayValue) {
 void User::displayHand() {
 	for (size_t i{ 0 }; i < m_handCards.size(); i++) {
 		SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
-		,m_origin.y + cardYOffset * floor(i/cardColumnLength),
+		,m_origin.y + cardYOffset * (int)(floor(i/cardColumnLength)),
 		m_handCards[i].getCardImg());
 		SDL_RenderCopy(m_renderer, m_handCards[i].getCardImg(), NULL, &cardRect);
 	}

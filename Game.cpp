@@ -370,11 +370,11 @@ void Game::activateMove(PlayerAction action, Player& player, const bool forSplit
 void  Game::askForReplay(unsigned int balance) {
 
 	TextTexture balanceText(m_renderer, "Your current balance is:", m_mediumFont);
-	balanceText.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * .5), static_cast<int> (m_windowHeight * .4) });
+	balanceText.setPosition(SDL_Point{ 30, static_cast<int> (m_windowHeight * .5 - balanceText.getRect()->h * 0.5) }, false);
 	SDL_RenderCopy(m_renderer, balanceText.getTexture(), NULL, balanceText.getRect());
 
 	TextTexture balanceAmount(m_renderer, std::to_string(balance), m_mediumFont);
-	balanceAmount.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * .5), static_cast<int> (m_windowHeight * 0.5) });
+	balanceAmount.setPosition(SDL_Point{ balanceText.getPosition()->x + balanceText.getRect()->w + 40, static_cast<int> (m_windowHeight * .5 - balanceAmount.getRect()->h * 0.5) }, false);
 	SDL_RenderCopy(m_renderer, balanceAmount.getTexture(), NULL, balanceAmount.getRect());
 
 	TextTexture replayText(m_renderer, "Would you like to play again?", m_mediumFont);
@@ -469,7 +469,7 @@ void Game::displayTurnOptions(const bool splitHand) {
 			//cards are the same, provide option for split
 
 			TextTexture split(m_renderer, "split", m_mediumFont);
-			split.setPosition(SDL_Point{171, static_cast<int>(m_windowHeight * 0.9) });
+			split.setPosition(SDL_Point{ 171, static_cast<int>(m_windowHeight * 0.9) });
 			textureList.push_back(split);
 
 
@@ -563,7 +563,7 @@ void Game::payout(const std::vector <Card> hand, std::string handName) {
 	else if (User::checkHandValue(hand) <= 21
 		&& User::checkHandValue(m_dealer.getCards()) > 21)
 	{
-		TextTexture payout(m_renderer, "Dealer is over 21 and your " + handName , m_smallFont);
+		TextTexture payout(m_renderer, "Dealer is over 21 and your " + handName, m_smallFont);
 		TextTexture payout2(m_renderer, "hand is not. You Win!", m_smallFont);
 		payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
 		payout2.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .15) });
@@ -608,94 +608,95 @@ void Game::loop() {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	while (m_event.type != SDL_QUIT) {
-		while (SDL_WaitEvent(&m_event)) {
-			SDL_RenderClear(m_renderer);
-			SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
-			SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
-			SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
+		SDL_WaitEvent(&m_event);
+		SDL_RenderClear(m_renderer);
+		SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+		SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
+		SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
 
 
-			if (m_cGameScene == GameScene::START)
-				startScreen();
-			else if (m_cGameScene == GameScene::BALANCECHECK)
-				askForInitialBalance();
-			else if (m_cGameScene == GameScene::BETCHECK)
-				askForBetValue();
-			else if (m_cGameScene == GameScene::GAMELOOP) {
+		if (m_cGameScene == GameScene::START)
+			startScreen();
+		else if (m_cGameScene == GameScene::BALANCECHECK)
+			askForInitialBalance();
+		else if (m_cGameScene == GameScene::BETCHECK)
+			askForBetValue();
+		else if (m_cGameScene == GameScene::GAMELOOP) {
 
 
-				if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21 && !gameHasStarted) {
-					TextTexture payout(m_renderer, "You have a natural. You Win!", m_smallFont);
-					payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
-					SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
-					askForReplay(m_player.getUserBalance() + (int)(round(m_betValue * 2.5f)));
-				}
-				//dealer natural 
-				else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
-					TextTexture payout(m_renderer, "The dealer has a natural. You Lose.", m_smallFont);
-					payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
-					SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
-					askForReplay(m_player.getUserBalance() - m_betValue);
-				}
-				//tie
-				else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
-					TextTexture payout(m_renderer, "The game is a tie and will now reset.", m_smallFont);
-					payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
-					SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
-					askForReplay(m_player.getUserBalance() + m_betValue);
-				}
-				else if (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
-					gameHasStarted = true;
-					displayTurnOptions();
-					displayAllHands();
+			if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21 && !gameHasStarted) {
+				TextTexture payout(m_renderer, "You have a natural. You Win!", m_smallFont);
+				payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
+				SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
+				askForReplay(m_player.getUserBalance() + (int)(round(m_betValue * 2.5f)));
+			}
+			//dealer natural 
+			else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
+				TextTexture payout(m_renderer, "The dealer has a natural. You Lose.", m_smallFont);
+				payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
+				SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
+				askForReplay(m_player.getUserBalance() - m_betValue);
+			}
+			//tie
+			else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
+				TextTexture payout(m_renderer, "The game is a tie and will now reset.", m_smallFont);
+				payout.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
+				SDL_RenderCopy(m_renderer, payout.getTexture(), NULL, payout.getRect());
+				askForReplay(m_player.getUserBalance() + m_betValue);
+			}
+			else if (!m_player.getIsStanding() && User::checkHandValue(m_player.getCards()) <= 21) {
+				gameHasStarted = true;
+				displayTurnOptions();
+				displayAllHands();
 
-					//if (m_player.getIsSplit()) {
+				//if (m_player.getIsSplit()) {
 
-					//	//play split hand
-					//	m_player.setIsStanding(false);
-					//	//display hand
-					//	std::cout << "\nWe will now look at this hand: " << std::endl;
-					//	m_player.displayHand(m_player.getSplitCards());
-					//	m_player.displayHandValue(m_player.getSplitCards());
-					//	std::cout << std::endl;
-					//	while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
+				//	//play split hand
+				//	m_player.setIsStanding(false);
+				//	//display hand
+				//	std::cout << "\nWe will now look at this hand: " << std::endl;
+				//	m_player.displayHand(m_player.getSplitCards());
+				//	m_player.displayHandValue(m_player.getSplitCards());
+				//	std::cout << std::endl;
+				//	while (!m_player.getIsStanding() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
 
-					//		if (turnCount <= 0) {
-					//			firstTurn(true);
-					//		}
-					//		else {
-					//			turn(true);
-					//		}
-					//		turnCount++;
-					//	}
-					//}
+				//		if (turnCount <= 0) {
+				//			firstTurn(true);
+				//		}
+				//		else {
+				//			turn(true);
+				//		}
+				//		turnCount++;
+				//	}
+				//}
 
-				}
-				else if (!m_player.getIsStanding() && m_player.getIsSplit() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
-					displayTurnOptions(true);
-					displayAllHands();
-				}
+			}
+			else if (!m_player.getIsStanding() && m_player.getIsSplit() && User::checkHandValue(m_player.getSplitCards()) <= 21) {
+				displayTurnOptions(true);
+				displayAllHands();
+			}
 
-				if (m_player.getIsStanding() && User::checkHandValue(m_dealer.getCards()) <= 17) {
-					m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
-					displayAllHands();
-				}
+			if (m_player.getIsStanding() && User::checkHandValue(m_dealer.getCards()) <= 17) {
+				m_dealer.addCardToHand(&m_dealer.getCards(), m_deck.takeCardFromFront());
+				displayAllHands();
+			}
 
+
+
+			if (m_player.getIsStanding() || User::checkHandValue(m_player.getCards()) > 21) {
 				for (size_t i{ 0 }; i < m_dealer.getCards().size(); ++i) {
 					m_dealer.getCards()[i].setIsFacingDown(false);
 					displayAllHands();
 				}
 
-				if (m_player.getIsStanding() || User::checkHandValue(m_player.getCards()) > 21) {
-					if (m_player.getIsSplit())
-						payout(m_player.getSplitCards(), "split");
-					payout(m_player.getCards(), "original");
-				}
-
+				if (m_player.getIsSplit())
+					payout(m_player.getSplitCards(), "split");
+				payout(m_player.getCards(), "original");
 			}
+
+		}
 		SDL_RenderCopy(m_renderer, m_mousePointer, NULL, &mousePointerRect);
 		SDL_RenderPresent(m_renderer);
-		}
 	}
 
 

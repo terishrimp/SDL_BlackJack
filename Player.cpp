@@ -26,7 +26,7 @@ void Player::displaySplitHand() {
 
 		for (size_t i{ 0 }; i < m_splitHandCards.size(); i++) {
 			SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
-				, m_origin.y + splitHandYOffset + cardYOffset * floor(i / cardColumnLength),
+				, m_origin.y + splitHandYOffset + cardYOffset * (int)(floor(i / cardColumnLength)),
 				m_splitHandCards[i].getCardImg());
 			SDL_RenderCopy(m_renderer, m_splitHandCards[i].getCardImg(), NULL, &cardRect);
 		}
