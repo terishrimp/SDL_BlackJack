@@ -8,6 +8,9 @@ Game::Game(Player player, Dealer dealer, Deck deck, SDL_Renderer* renderer, SDL_
 	Game::m_gameBg = IMG_LoadTexture(m_renderer, m_gameBgString.c_str());
 	Game::m_mousePointer = IMG_LoadTexture(m_renderer, m_mousePointerString.c_str());
 	SDL_GetWindowSize(window, &m_windowWidth, &m_windowHeight);
+
+	m_deck.shuffleCardList();
+	createHands();
 }
 
 
@@ -15,18 +18,6 @@ void Game::addCardToPlayerHand(User& player) {
 	player.addCardToHand(&player.getCards(), m_deck.takeCardFromFront());
 }
 
-bool Game::checkValidInput(PlayerAction action, PlayerAction actionList[], const size_t arraySize) {
-	bool isValid = false;
-
-	//compare player input to all char's in char array
-	// if none are valid, return false otherwise return true
-	for (size_t i{ 0 }; i < arraySize; ++i) {
-		if (action == actionList[i]) {
-			isValid = true;
-		}
-	}
-	return isValid;
-}
 
 void Game::displayAllHands() {
 	m_player.displayHand();
@@ -45,13 +36,6 @@ void Game::createHands()
 	addCardToPlayerHand(m_dealer);
 	addCardToPlayerHand(m_dealer);
 	m_dealer.getCards()[1].setIsFacingDown(true);
-}
-
-void Game::start() {
-	//askForInitialBalance();
-	//askForBetValue();
-	m_deck.shuffleCardList();
-	createHands();
 }
 
 void Game::startScreen() {
@@ -156,7 +140,6 @@ void Game::askForInitialBalance() {
 		done.setColor(grey);
 		if (m_event.type == SDL_MOUSEBUTTONDOWN) {
 			if ((int)m_player.getUserBalance() > 0) {
-				start();
 				m_cGameScene = GameScene::BETCHECK;
 				return;
 			}
@@ -288,7 +271,7 @@ void Game::reset() {
 
 }
 
-void Game::activateMove(PlayerAction action, Player& player, const bool forSplit) {
+void Game::activateMove(const PlayerAction action, Player& player, const bool forSplit) {
 	if (turnCount == 0) {
 		switch (action) {
 		case PlayerAction::STAND:
@@ -725,6 +708,7 @@ void Game::loop() {
 						m_dealer.getCards()[i].setIsFacingDown(false);
 						displayAllHands();
 					}
+					//payout only for normal hand
 					payout(m_player.getCards(), "original");
 				}
 			}

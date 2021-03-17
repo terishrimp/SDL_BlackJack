@@ -1,8 +1,7 @@
 #pragma once
 #include "Deck.h"
 
-Deck::Deck(SDL_Renderer* renderer) {
-	m_renderer = renderer;
+Deck::Deck(SDL_Renderer* const renderer) : m_renderer{ renderer } {
 	createDeck();
 }
 

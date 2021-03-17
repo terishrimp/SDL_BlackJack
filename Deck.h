@@ -10,7 +10,7 @@ class Deck {
 private:
 	void removeCard(const int index);
 	std::vector <Card> deckList;
-	SDL_Renderer* m_renderer;
+	SDL_Renderer* const m_renderer;
 public:
 	Deck(SDL_Renderer* renderer);
 	void createDeck();

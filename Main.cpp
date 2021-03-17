@@ -32,7 +32,6 @@ int main(int argv, char** argc) {
 	Deck deck(ren);
 	Game game(player, dealer, deck, ren, win);
 	game.loop();
-	game.quit();
 	return 0;
 }
 
