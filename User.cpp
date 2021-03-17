@@ -22,11 +22,11 @@ void User::clearHands() {
 }
 
 
-unsigned int User::getUserBalance() {
+int User::getUserBalance() {
 	return m_Balance;
 }
 
-void User::setUserBalance(unsigned int m_value) {
+void User::setUserBalance( int m_value) {
 	m_Balance = m_value;
 }
 int User::checkHandValue(const std::vector <Card>& handToCheck) {

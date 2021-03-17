@@ -7,7 +7,7 @@
 #include "SDL_image.h"
 class User {
 protected:
-	unsigned int m_Balance{ 0 };
+	 int m_Balance{ 0 };
 	std::string m_name;
 	std::vector <Card> m_handCards;
 	bool m_isStanding{ false };
@@ -18,10 +18,11 @@ protected:
 	const Uint8 cardColumnLength = 4;
 
 public:	
-	unsigned int getUserBalance();
-	void setUserBalance(unsigned int m_value);
+	 int getUserBalance();
+	void setUserBalance( int m_value);
 
 	User(std::string name, SDL_Point origin, SDL_Renderer *renderer);
+
 	std::vector<Card>& getCards();
 	virtual void clearHands();
 	void addCardToHand(std::vector<Card> * const handToAddTo, const Card cardToAdd);
@@ -29,8 +30,8 @@ public:
 	int static checkHandValue(const std::vector <Card> &handToCheck);
 	void displayHandValue(const std::vector <Card> &handToDisplayValue);
 	virtual void displayHand();
-	void stand();
 
+	void stand();
 	bool getIsStanding();
 	void setIsStanding(const bool m_value);
 

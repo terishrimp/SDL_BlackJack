@@ -36,15 +36,24 @@ void Player::setIsSplit(bool value) {
 	m_isSplit = value;
 }
 
-bool Player::getCanSurrender() {
-	return m_canSurrender;
+bool Player::getIsSurrendered() {
+	return m_isSurrendered;
 }
-void Player::setCanSurrender(bool value) {
-	m_canSurrender = value;
+
+void Player::setIsSurrendered(bool value) {
+	m_isSurrendered = value;
 }
-bool Player::getCanSplit() {
-	return m_canSplit;
+
+bool Player::getIsStandingOnSplit() {
+	return m_isStandingOnSplit;
 }
-void Player::setCanSplit(bool value) {
-	m_canSplit = value;
+void Player::setIsStandingOnSplit(bool value){
+	m_isStandingOnSplit = value;
+}
+
+bool Player::getIsPlayingRegularHand() {
+	return m_isPlayingRegularHand;
+}
+void Player::setIsPlayingRegularHand(bool value) {
+	m_isPlayingRegularHand = value;
 }

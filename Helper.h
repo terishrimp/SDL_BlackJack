@@ -19,6 +19,4 @@ public:
 	static SDL_Rect getOffsetRect(const int x, const int y, int scale, SDL_Texture* tex);
 	static SDL_Rect getOffsetRect(const int x, const int y, const int w, const int h);
 
-	static SDL_Texture* TTFtoTexture(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color);
-	static SDL_Rect TextRect(TTF_Font* font, const char* text);
 };

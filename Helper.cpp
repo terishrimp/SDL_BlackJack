@@ -26,12 +26,3 @@ SDL_Rect Helper::getOffsetRect(const int x, const int y, const int w, const int 
 
 	return tempRect;
 }
-
-SDL_Texture* Helper::TTFtoTexture(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color) {
-	return SDL_CreateTextureFromSurface(renderer, TTF_RenderText_Solid(font, text, color));
-}
-SDL_Rect Helper::TextRect(TTF_Font* font, const char* text) {
-	SDL_Rect tempRect{ NULL };
-	TTF_SizeText(font, text, &tempRect.w, &tempRect.h);
-	return tempRect;
-}
