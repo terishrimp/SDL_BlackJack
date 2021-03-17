@@ -51,12 +51,12 @@ void User::displayHandValue(const std::vector <Card>& handToDisplayValue) {
 	std::cout << "The value of " << m_name << "'s hand is: " << checkHandValue(handToDisplayValue) << std::endl;
 }
 
-void User::displayHand(std::vector <Card>& handToDisplay) {
-	for (size_t i{ 0 }; i < handToDisplay.size(); i++) {
+void User::displayHand() {
+	for (size_t i{ 0 }; i < m_handCards.size(); i++) {
 		SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
 		,m_origin.y + cardYOffset * floor(i/cardColumnLength),
-		handToDisplay[i].getCardImg());
-		SDL_RenderCopy(m_renderer, handToDisplay[i].getCardImg(), NULL, &cardRect);
+		m_handCards[i].getCardImg());
+		SDL_RenderCopy(m_renderer, m_handCards[i].getCardImg(), NULL, &cardRect);
 	}
 
 	//std::cout << m_name << "'s current cards: ";

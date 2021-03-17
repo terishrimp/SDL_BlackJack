@@ -38,7 +38,7 @@ private:
 	void askForBetValue();
 	void displayAllHands();
 	void createHands();
-	void payout(const std::vector <Card> hand, std::string handName, bool replay = true);
+	void payout(const std::vector <Card> hand, std::string handName);
 	void displayTurnOptions(const bool splitHand = false);
 	unsigned int turnCount{ 0 };
 	Player m_player;
@@ -56,7 +56,7 @@ private:
 	SDL_Point m_mousePoint{ NULL };
 	SDL_Texture* m_gameBg;
 	SDL_Texture* m_mousePointer;
-	TTF_Font* m_smallFont = TTF_OpenFont("./Fonts/slkscre.ttf", 10);
+	TTF_Font* m_smallFont = TTF_OpenFont("./Fonts/slkscre.ttf", 14);
 	TTF_Font* m_mediumFont = TTF_OpenFont("./Fonts/slkscre.ttf", 16);
 	TTF_Font* m_largeFont = TTF_OpenFont("./Fonts/slkscre.ttf", 24);
 	const std::string m_mousePointerString = "./Images/Pointer.png";

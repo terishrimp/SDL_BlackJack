@@ -28,7 +28,7 @@ public:
 	void sortHand(std::vector <Card> *hand);
 	int static checkHandValue(const std::vector <Card> &handToCheck);
 	void displayHandValue(const std::vector <Card> &handToDisplayValue);
-	void displayHand( std::vector <Card> &handToDisplay);
+	virtual void displayHand();
 	void stand();
 
 	bool getIsStanding();

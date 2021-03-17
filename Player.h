@@ -16,6 +16,7 @@ class Player : public User{
 private:
 
 	std::vector <Card> m_splitHandCards;
+	int splitHandYOffset = 100;
 	bool m_isSplit{ false };
 	bool m_canSurrender{ false };
 	bool m_canSplit{ false };
@@ -30,6 +31,6 @@ public:
 	void setCanSurrender(bool value);
 	bool getCanSplit();
 	void setCanSplit(bool value);
-
+	void displaySplitHand();
 
 }; 

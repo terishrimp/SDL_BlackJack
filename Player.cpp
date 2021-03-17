@@ -20,11 +20,16 @@ void Player::split() {
 	m_isSplit = true;
 	addCardToHand(&m_splitHandCards, m_handCards[m_handCards.size() - 1]);
 	m_handCards.pop_back();
-	std::cout << "We will first play this hand: " << std::endl;
-	displayHand(m_handCards);
-	displayHandValue(m_handCards);
-	std::cout << std::endl;
+}
 
+void Player::displaySplitHand() {
+
+		for (size_t i{ 0 }; i < m_splitHandCards.size(); i++) {
+			SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
+				, m_origin.y + splitHandYOffset + cardYOffset * floor(i / cardColumnLength),
+				m_splitHandCards[i].getCardImg());
+			SDL_RenderCopy(m_renderer, m_splitHandCards[i].getCardImg(), NULL, &cardRect);
+		}
 }
 
 void Player::setIsSplit(bool value) {
