@@ -14,9 +14,8 @@ public:
 		}
 		return -1;
 	}
-
+	static SDL_Rect getOffsetRect(SDL_Point point, SDL_Texture* tex);
 	static SDL_Rect getOffsetRect(const int x, const int y, SDL_Texture* tex);
 	static SDL_Rect getOffsetRect(const int x, const int y, int scale, SDL_Texture* tex);
 	static SDL_Rect getOffsetRect(const int x, const int y, const int w, const int h);
-
 };

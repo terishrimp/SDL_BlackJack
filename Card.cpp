@@ -1,14 +1,13 @@
 #pragma once
 #include "Card.h"
 
-
 SDL_Texture* Card::FindCardTexture(std::string name, std::string suit, SDL_Renderer* renderer) {
 	std::string filePath{ "./Images/Cards/" };
 	filePath += name + "Of" + suit + ".png";
 	return IMG_LoadTexture(renderer, filePath.c_str());
 }
 
-Card::Card(bool isFaceDown, int m_value, std::string name, std::string suit, SDL_Renderer * renderer) {
+Card::Card(bool isFaceDown, int m_value, std::string name, std::string suit, SDL_Renderer* renderer) {
 	Card::isFaceDown = isFaceDown;
 	Card::m_value = m_value;
 	Card::m_name = name;

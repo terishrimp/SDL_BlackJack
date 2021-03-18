@@ -21,12 +21,11 @@ void User::clearHands() {
 	m_handCards.clear();
 }
 
-
 int User::getUserBalance() {
 	return m_Balance;
 }
 
-void User::setUserBalance( int m_value) {
+void User::setUserBalance(int m_value) {
 	m_Balance = m_value;
 }
 int User::checkHandValue(const std::vector <Card>& handToCheck) {
@@ -54,8 +53,8 @@ void User::displayHandValue(const std::vector <Card>& handToDisplayValue) {
 void User::displayHand() {
 	for (size_t i{ 0 }; i < m_handCards.size(); i++) {
 		SDL_Rect cardRect = Helper::getOffsetRect(m_origin.x + cardXOffset * (i % cardColumnLength)
-		,m_origin.y + cardYOffset * (int)(floor(i/cardColumnLength)),
-		m_handCards[i].getCardImg());
+			, m_origin.y + cardYOffset * (int)(floor(i / cardColumnLength)),
+			m_handCards[i].getCardImg());
 		SDL_RenderCopy(m_renderer, m_handCards[i].getCardImg(), NULL, &cardRect);
 	}
 
@@ -78,17 +77,17 @@ bool User::getIsStanding() {
 	return m_isStanding;
 }
 
-
 void User::stand() {
 	setIsStanding(true);
 }
-
-
-
 
 void User::setIsStanding(bool value) {
 	m_isStanding = value;
 }
 void User::sortHand(std::vector <Card>* hand) {
 	std::sort(hand->begin(), hand->end(), [](Card& a, Card& b) {return a.getValue() > b.getValue(); });
+}
+
+SDL_Point User::getOrigin() {
+	return m_origin;
 }

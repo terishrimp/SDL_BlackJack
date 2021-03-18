@@ -18,5 +18,4 @@ public:
 	std::vector<Card> getDeckList();
 	Card getCardAtIndex(const int index);
 	void shuffleCardList();
-
 };

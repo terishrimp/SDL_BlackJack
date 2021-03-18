@@ -17,17 +17,17 @@ enum class PlayerHand {
 	SPLIT
 };
 
-class Player : public User{
+class Player : public User {
 private:
 
 	std::vector <Card> m_splitHandCards;
-	int splitHandYOffset = 100;
 	bool m_isSplit{ false };
 	bool m_isSurrendered{ false };
 	bool m_isStandingOnSplit{ false };
 	bool m_isPlayingRegularHand = true;
 public:
-	Player(std::string name, SDL_Point origin, SDL_Renderer *renderer);
+	const int splitHandYOffset = 120;
+	Player(std::string name, SDL_Point origin, SDL_Renderer* renderer);
 	void clearHands() override;
 	std::vector<Card>& getSplitCards();
 	void displaySplitHand();
@@ -44,5 +44,4 @@ public:
 
 	bool getIsPlayingRegularHand();
 	void setIsPlayingRegularHand(bool value);
-
-}; 
+};

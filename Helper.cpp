@@ -1,5 +1,13 @@
 #include "Helper.h"
 
+SDL_Rect Helper::getOffsetRect(SDL_Point point, SDL_Texture* tex) {
+	SDL_Rect tempRect{ NULL };
+	tempRect.x = point.x;
+	tempRect.y = point.y;
+	SDL_QueryTexture(tex, NULL, NULL, &tempRect.w, &tempRect.h);
+
+	return tempRect;
+}
 SDL_Rect Helper::getOffsetRect(const int x, const int y, SDL_Texture* tex) {
 	SDL_Rect tempRect{ NULL };
 	tempRect.x = x;

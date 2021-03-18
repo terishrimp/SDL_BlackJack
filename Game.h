@@ -5,9 +5,11 @@
 #include "Deck.h"
 #include "TextTexture.h"
 #include "SDL.h"
+#include "SDL_mixer.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include <string>
+
 
 enum class GameScene {
 	START,
@@ -34,24 +36,33 @@ private:
 	void activateMove(const PlayerAction action, Player& player, const bool forSplit = false);
 	void askForReplay(const unsigned int balance);
 	void reset();
-	void displayAllHands();
+	void updateHands();
 	void createHands();
-	void payout(const std::vector <Card> hand, std::string handName);
-	void displayTurnOptions(const bool splitHand = false);
+	void payout(bool isSplit = false);
+	void updateMoveOptions(const bool splitHand = false);
 
 	const SDL_Color white = SDL_Color{ 255,255,255,255 };
 	const SDL_Color grey = SDL_Color{ 128,128,128,255 };
-	TTF_Font* const m_smallFont = TTF_OpenFont("./Fonts/slkscre.ttf", 14);
-	TTF_Font* const m_mediumFont = TTF_OpenFont("./Fonts/slkscre.ttf", 16);
-	TTF_Font* const m_largeFont = TTF_OpenFont("./Fonts/slkscre.ttf", 24);
+	const SDL_Color brown = SDL_Color{ 104,104,32, 255 };
+	const SDL_Color lightBrown = SDL_Color{232, 232, 122, 255};
+	TTF_Font* const m_smallFont = TTF_OpenFont("./Fonts/alagard.ttf", 14);
+	TTF_Font* const m_mediumFont = TTF_OpenFont("./Fonts/alagard.ttf", 16);
+	TTF_Font* const m_largeFont = TTF_OpenFont("./Fonts/alagard.ttf", 26);
 	const std::string m_mousePointerString = "./Images/Pointer.png";
 	const std::string m_gameBgString = "./Images/Board.png";
+	SDL_Texture* const winText; 
+	SDL_Texture* const loseText;
+	Mix_Chunk* playCardSound = Mix_LoadWAV("./Sounds/playcard.wav");
+	Mix_Chunk* drawCardSound = Mix_LoadWAV("./Sounds/draw.wav");
+	Mix_Chunk* shuffleSound = Mix_LoadWAV("./Sounds/shuffle.wav");
+	Mix_Chunk* drumHitSound = Mix_LoadWAV("./Sounds/cuckoo.wav");
+	Mix_Chunk* errorSound = Mix_LoadWAV("./Sounds/error.wav");
+	const int textShadowOffset{ -2 };
 
 	unsigned int turnCount{ 0 };
 	unsigned int m_betValue{ 0 };
 	bool gameHasStarted = false;
-	bool gameHasCompleted = false;
-	GameScene m_cGameScene = GameScene::START;
+	GameScene m_gameScene;
 
 	Player m_player;
 	Dealer m_dealer;

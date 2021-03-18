@@ -2,22 +2,26 @@
 #include <iostream>
 #include <cstdlib>
 #include "SDL_ttf.h"
+#include "SDL_mixer.h"
 #include "Game.h"
 #include "Deck.h"
 #include "Dealer.h"
 #include "Player.h"
 #include "Helper.h"
 
-
 int main(int argv, char** argc) {
-
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		std::cerr << "Unable to init SDL: " << SDL_GetError();
 		return -1;
 	}
+
 	if (TTF_Init() == -1) {
 		printf("TTF_Init: %s\n", TTF_GetError());
-		return -1;
+	}
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
 	SDL_Window* win = SDL_CreateWindow("BlackJack", 100, 100, 512, 444, SDL_WINDOW_SHOWN);
@@ -34,5 +38,3 @@ int main(int argv, char** argc) {
 	game.loop();
 	return 0;
 }
-
-

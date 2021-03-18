@@ -11,7 +11,7 @@ public:
 	void setIsFacingDown(const bool value);
 	bool getIsFacingDown();
 
-	void setSuit(const std::string &str);
+	void setSuit(const std::string& str);
 	std::string getSuit();
 
 	int getValue();
@@ -19,7 +19,6 @@ public:
 	std::string getName();
 
 	SDL_Texture* getCardImg();
-
 
 private:
 	SDL_Renderer* m_renderer;
@@ -29,4 +28,3 @@ private:
 	int m_value;
 	std::string m_name;
 };
-
