@@ -47,6 +47,7 @@ void Card::setSuit(const std::string& str) {
 	if (lowered == "spades" || lowered == "clubs"
 		|| lowered == "hearts" || lowered == "diamonds") {
 		m_suit = str;
+		Card::m_cardImg = Card::FindCardTexture(m_name, m_suit, m_renderer);
 	}
 	else {
 		m_suit = "NO SUIT";

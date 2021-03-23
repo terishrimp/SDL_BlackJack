@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include <string>
+#include <iostream>
 class TextTexture {
 public:
 	TextTexture(SDL_Renderer* renderer, TTF_Font* font);

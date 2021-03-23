@@ -3,9 +3,9 @@
 Game::Game(Player player, Dealer dealer, Deck deck, SDL_Renderer* renderer, SDL_Window* window)
 	: m_player{ player }, m_dealer{ dealer }, m_deck{ deck }, winText{ IMG_LoadTexture(renderer, "./Images/WinText.png") },
 	loseText{ IMG_LoadTexture(renderer, "./Images/LoseText.png") } {
-
 	Game::m_renderer = renderer;
 	Game::m_window = window;
+	Game::m_emptyGameBg = IMG_LoadTexture(m_renderer, m_emptyGameBgString.c_str());
 	Game::m_gameBg = IMG_LoadTexture(m_renderer, m_gameBgString.c_str());
 	Game::m_mousePointer = IMG_LoadTexture(m_renderer, m_mousePointerString.c_str());
 	m_gameScene = GameScene::START;
@@ -17,23 +17,28 @@ void Game::addCardToPlayerHand(User& player) {
 	player.addCardToHand(&player.getCards(), m_deck.takeCardFromFront());
 }
 
-void Game::updateHands() {
+void Game::updateTable() {
+	SDL_Texture* playerIcon = IMG_LoadTexture(m_renderer, "./Images/playerIcon.png");
+	SDL_Rect playerIconRect = Helper::getOffsetRect(m_player.getOrigin().x - 60, m_player.getOrigin().y, playerIcon);
+	SDL_Texture* dealerIcon = IMG_LoadTexture(m_renderer, "./Images/playerIcon2.png");
+	SDL_Rect dealerIconRect = Helper::getOffsetRect(m_dealer.getOrigin().x + 150, m_dealer.getOrigin().y, dealerIcon);
 
 	TextTexture dealerText(m_renderer, "DEALER", m_mediumFont);
 	dealerText.setColor(lightBrown);
-	dealerText.setPosition(SDL_Point{ m_dealer.getOrigin().x, m_dealer.getOrigin().y - 20 }, false);
+	dealerText.setPosition(SDL_Point{ dealerIconRect.x + 16, m_dealer.getOrigin().y - 10 });
 	TextTexture dealerShadow = dealerText;
 	dealerShadow.setColor(brown);
 	dealerShadow.setPosition(SDL_Point{ dealerText.getPosition()->x - textShadowOffset, dealerText.getPosition()->y - textShadowOffset }, false);
 
-
 	TextTexture playerText(m_renderer, "PLAYER", m_mediumFont);
 	playerText.setColor(lightBrown);
-	playerText.setPosition(SDL_Point{ m_player.getOrigin().x, m_player.getOrigin().y - 20 }, false);
+	playerText.setPosition(SDL_Point{ playerIconRect.x + 16, m_player.getOrigin().y - 10 });
 	TextTexture playerShadow = playerText;
 	playerShadow.setColor(brown);
 	playerShadow.setPosition(SDL_Point{ playerText.getPosition()->x - textShadowOffset, playerText.getPosition()->y - textShadowOffset }, false);
 
+	SDL_Texture* deckImg = IMG_LoadTexture(m_renderer, "./Images/Cards/CardFaceDown.png");
+	SDL_Rect deckImgRect = Helper::getOffsetRect(m_windowWidth * 0.5 - 10, m_windowHeight * .4, deckImg);
 
 	SDL_Texture* arrow = IMG_LoadTexture(m_renderer, "./Images/Arrow_01.png");
 	SDL_Rect arrowRect{ 0,0,0,0 };
@@ -47,6 +52,9 @@ void Game::updateHands() {
 
 	}
 
+	SDL_RenderCopy(m_renderer, dealerIcon, NULL, &dealerIconRect);
+	SDL_RenderCopy(m_renderer, playerIcon, NULL, &playerIconRect);
+	SDL_RenderCopy(m_renderer, deckImg, NULL, &deckImgRect);
 	SDL_RenderCopy(m_renderer, dealerShadow.getTexture(), NULL, dealerShadow.getRect());
 	SDL_RenderCopy(m_renderer, dealerText.getTexture(), NULL, dealerText.getRect());
 	SDL_RenderCopy(m_renderer, playerShadow.getTexture(), NULL, playerShadow.getRect());
@@ -83,8 +91,8 @@ void Game::startScreen() {
 	title.setColor(brown);
 
 	TextTexture titleHighlight(m_renderer, "BlackJack", m_largeFont);
-	titleHighlight.setPosition(SDL_Point{ title.getPosition()->x + textShadowOffset/2,
-		title.getPosition()->y + textShadowOffset/2 }, false);
+	titleHighlight.setPosition(SDL_Point{ title.getPosition()->x + textShadowOffset / 2,
+		title.getPosition()->y + textShadowOffset / 2 }, false);
 	titleHighlight.setColor(SDL_Color{ 0,64,0,255 });
 	titleHighlight.setColor(lightBrown);
 
@@ -499,14 +507,12 @@ void Game::reset() {
 	createHands();
 }
 
-void  Game::askForReplay(unsigned int updatedBalance) {
-	TextTexture balanceAmount(m_renderer, "Your current balance is: " + std::to_string(updatedBalance), m_smallFont);
-	balanceAmount.setPosition(SDL_Point{ 100, static_cast<int> (m_windowHeight * 0.725) }, false);
-	SDL_RenderCopy(m_renderer, balanceAmount.getTexture(), NULL, balanceAmount.getRect());
+void  Game::askForReplay(const int updatedBalance) {
+	TextTexture endText(m_renderer, "Your current balance is: " + std::to_string(updatedBalance), m_smallFont);
+	endText.setPosition(SDL_Point{ 100, static_cast<int> (m_windowHeight * 0.725) }, false);
 
 	TextTexture replayText(m_renderer, "Play again?", m_smallFont);
 	replayText.setPosition(SDL_Point{ 384 , static_cast<int> (m_windowHeight * 0.7) });
-	SDL_RenderCopy(m_renderer, replayText.getTexture(), NULL, replayText.getRect());
 
 	TextTexture yes(m_renderer, "yes", m_smallFont);
 	yes.setPosition(SDL_Point{ replayText.getRect()->x + replayText.getRect()->w / 2 - 40, static_cast<int> (m_windowHeight * 0.75) });
@@ -514,24 +520,57 @@ void  Game::askForReplay(unsigned int updatedBalance) {
 	TextTexture no(m_renderer, "no", m_smallFont);
 	no.setPosition(SDL_Point{ replayText.getRect()->x + replayText.getRect()->w / 2 + 40, static_cast<int> (m_windowHeight * 0.75) });
 
-	if (SDL_PointInRect(&m_mousePoint, yes.getRect())) {
-		if (m_event.type == SDL_MOUSEBUTTONDOWN) {
-			m_player.setUserBalance(updatedBalance);
-			m_gameScene = GameScene::BETCHECK;
-			m_betValue = 0;
-			Mix_PlayChannel(-1, drumHitSound, 0);
-			return;
-		}
-		yes.setColor(grey);
-	}
+	if (updatedBalance > 10) {
 
-	if (SDL_PointInRect(&m_mousePoint, no.getRect())) {
-		if (m_event.type == SDL_MOUSEBUTTONDOWN) {
-			Mix_PlayChannel(-1, drumHitSound, 0);
-			quit();
+		if (SDL_PointInRect(&m_mousePoint, yes.getRect())) {
+			if (m_event.type == SDL_MOUSEBUTTONDOWN) {
+				m_player.setUserBalance(updatedBalance);
+				m_gameScene = GameScene::BETCHECK;
+				m_betValue = 0;
+				Mix_PlayChannel(-1, drumHitSound, 0);
+				return;
+			}
+			yes.setColor(grey);
 		}
-		no.setColor(grey);
+
+		if (SDL_PointInRect(&m_mousePoint, no.getRect())) {
+			if (m_event.type == SDL_MOUSEBUTTONDOWN) {
+				Mix_PlayChannel(-1, drumHitSound, 0);
+				quit();
+			}
+			no.setColor(grey);
+		}
 	}
+	else {
+
+		endText.setText("Your balance is below minimum bet.");
+		endText.setPosition(SDL_Point{ 50, static_cast<int> (m_windowHeight * 0.7 - endText.getRect()->h/2) }, false);
+
+		TextTexture endText2(m_renderer, "Game Over.", m_smallFont);
+		endText2.setPosition(SDL_Point{ 50, static_cast<int>(m_windowHeight * 0.725 + endText2.getRect()->h/2) }, false);
+		SDL_RenderCopy(m_renderer, endText2.getTexture(), NULL, endText2.getRect());
+
+		if (SDL_PointInRect(&m_mousePoint, yes.getRect())) {
+			if (m_event.type == SDL_MOUSEBUTTONDOWN) {
+				m_player.setUserBalance(updatedBalance);
+				m_gameScene = GameScene::START;
+				Mix_PlayChannel(-1, drumHitSound, 0);
+				return;
+			}
+			yes.setColor(grey);
+		}
+
+		if (SDL_PointInRect(&m_mousePoint, no.getRect())) {
+			if (m_event.type == SDL_MOUSEBUTTONDOWN) {
+				Mix_PlayChannel(-1, drumHitSound, 0);
+				quit();
+			}
+			no.setColor(grey);
+		}
+	}
+	SDL_RenderCopy(m_renderer, endText.getTexture(), NULL, endText.getRect());
+	SDL_RenderCopy(m_renderer, replayText.getTexture(), NULL, replayText.getRect());
+
 	SDL_RenderCopy(m_renderer, yes.getTexture(), NULL, yes.getRect());
 	SDL_RenderCopy(m_renderer, no.getTexture(), NULL, no.getRect());
 }
@@ -693,7 +732,7 @@ void Game::payout(bool isSplit) {
 		&& User::checkHandValue(m_player.getCards()) == User::checkHandValue(m_dealer.getCards()))
 	{
 		//return bet to player balance
-		tieText.setPosition(originalHandTextPos,false);
+		tieText.setPosition(originalHandTextPos, false);
 		SDL_RenderCopy(m_renderer, tieText.getTexture(), NULL, tieText.getRect());
 
 		regularHandPay = m_betValue;
@@ -757,7 +796,7 @@ void Game::payout(bool isSplit) {
 			&& User::checkHandValue(m_player.getSplitCards()) == User::checkHandValue(m_dealer.getCards()))
 		{
 			//return bet to player balance
-			tieText.setPosition(splitHandTextPos,false);
+			tieText.setPosition(splitHandTextPos, false);
 			SDL_RenderCopy(m_renderer, tieText.getTexture(), NULL, tieText.getRect());
 
 			splitHandPay = m_betValue;
@@ -804,54 +843,59 @@ void Game::payout(bool isSplit) {
 		}
 	}
 
-	if (m_player.getUserBalance() + regularHandPay + splitHandPay > 10) {
-		askForReplay(m_player.getUserBalance() + regularHandPay + splitHandPay);
-	}
-	else m_gameScene = GameScene::START;
+	askForReplay(m_player.getUserBalance() + regularHandPay + splitHandPay);
 }
+
 void Game::loop() {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	while (m_event.type != SDL_QUIT) {
 		SDL_WaitEvent(&m_event);
 		SDL_RenderClear(m_renderer);
-		SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+
 		SDL_GetMouseState(&m_mousePoint.x, &m_mousePoint.y);
 		SDL_Rect mousePointerRect = Helper::getOffsetRect(m_mousePoint.x - 12, m_mousePoint.y, m_mousePointer);
 
-		TextTexture naturalPayoutText(m_renderer, m_smallFont);
-		naturalPayoutText.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
-
 
 		if (m_gameScene == GameScene::START) {
+			SDL_RenderCopy(m_renderer, m_emptyGameBg, NULL, NULL);
 			reset();
 			startScreen();
 		}
-		else if (m_gameScene == GameScene::BALANCECHECK)
+		else if (m_gameScene == GameScene::BALANCECHECK) {
+			SDL_RenderCopy(m_renderer, m_emptyGameBg, NULL, NULL);
 			askForInitialBalance();
-		else if (m_gameScene == GameScene::BETCHECK)
+		}
+		else if (m_gameScene == GameScene::BETCHECK) {
+			SDL_RenderCopy(m_renderer, m_emptyGameBg, NULL, NULL);
 			askForBetValue();
+		}
 		else if (m_gameScene == GameScene::GAMELOOP) {
+			SDL_RenderCopy(m_renderer, m_gameBg, NULL, NULL);
+			TextTexture naturalPayoutText(m_renderer, m_smallFont);
+			naturalPayoutText.setPosition(SDL_Point{ static_cast<int> (m_windowWidth * 0.5), static_cast<int> (m_windowHeight * .1) });
+
+
 			if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) != 21 && !gameHasStarted) {
 				naturalPayoutText.setText("You have a natural. You Win!");
 				m_dealer.revealHand();
-				updateHands();
-				askForReplay(m_player.getUserBalance() + (int)(round(m_betValue * 2.5f)));
+				updateTable();
+				askForReplay(m_player.getUserBalance() + (int)(round(m_betValue * 1.5f)));
 				SDL_RenderCopy(m_renderer, naturalPayoutText.getTexture(), NULL, naturalPayoutText.getRect());
 			}
 			//dealer natural
 			else if (User::checkHandValue(m_player.getCards()) != 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
 				naturalPayoutText.setText("The dealer has a natural. You Lose.");
 				m_dealer.revealHand();
-				updateHands();
-				askForReplay(m_player.getUserBalance() - m_betValue);
+				updateTable();
+				askForReplay(m_player.getUserBalance());
 				SDL_RenderCopy(m_renderer, naturalPayoutText.getTexture(), NULL, naturalPayoutText.getRect());
 			}
 			//tie
 			else if (User::checkHandValue(m_player.getCards()) == 21 && User::checkHandValue(m_dealer.getCards()) == 21 && !gameHasStarted) {
 				naturalPayoutText.setText("The game is a tie and will now reset.");
 				m_dealer.revealHand();
-				updateHands();
+				updateTable();
 				askForReplay(m_player.getUserBalance() + m_betValue);
 				SDL_RenderCopy(m_renderer, naturalPayoutText.getTexture(), NULL, naturalPayoutText.getRect());
 			}
@@ -860,13 +904,13 @@ void Game::loop() {
 			{
 				gameHasStarted = true;
 				updateMoveOptions();
-				updateHands();
+				updateTable();
 			}
 			else if (!m_player.getIsStandingOnSplit() && m_player.getIsSplit() && User::checkHandValue(m_player.getSplitCards()) <= 21
 				&& !m_player.getIsPlayingRegularHand())
 			{
 				updateMoveOptions(true);
-				updateHands();
+				updateTable();
 			}
 
 			//dealer hits till above 16
@@ -876,7 +920,7 @@ void Game::loop() {
 			if (!m_player.getIsSplit()) {
 				if (m_player.getIsStanding() || User::checkHandValue(m_player.getCards()) > 21) {
 					m_dealer.revealHand();
-					updateHands();
+					updateTable();
 					//payout only for normal hand
 					payout();
 				}
@@ -887,7 +931,7 @@ void Game::loop() {
 				if ((m_player.getIsStanding() || User::checkHandValue(m_player.getCards()) > 21)
 					&& (m_player.getIsStandingOnSplit() || User::checkHandValue(m_player.getSplitCards()) > 21)) {
 					m_dealer.revealHand();
-					updateHands();
+					updateTable();
 					//payout for both hands.
 					payout(true);
 				}

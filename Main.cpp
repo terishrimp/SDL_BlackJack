@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Helper.h"
 
+
+
 int main(int argv, char** argc) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		std::cerr << "Unable to init SDL: " << SDL_GetError();

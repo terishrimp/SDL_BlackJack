@@ -2,17 +2,19 @@
 TextTexture::TextTexture(SDL_Renderer* renderer, TTF_Font* font) {
 	m_renderer = renderer;
 	m_font = font;
-	m_text = "";
-	m_texture = SDL_CreateTextureFromSurface(renderer,
-		TTF_RenderText_Solid(font, m_text.c_str(), SDL_Color{ 255,255,255,255 }));
+	m_text = "no text";
+
+	SDL_Surface *temp = TTF_RenderText_Solid(font, m_text.c_str(), SDL_Color{ 255,255,255,255 });
+	m_texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_QueryTexture(m_texture, NULL, NULL, &m_rect.w, &m_rect.h);
 }
 TextTexture::TextTexture(SDL_Renderer* renderer, std::string text, TTF_Font* font) {
 	m_renderer = renderer;
 	m_font = font;
 	m_text = text;
-	m_texture = SDL_CreateTextureFromSurface(renderer,
-		TTF_RenderText_Solid(font, text.c_str(), SDL_Color{ 255,255,255,255 }));
+
+	SDL_Surface* temp = TTF_RenderText_Solid(font, m_text.c_str(), SDL_Color{ 255,255,255,255 });
+	m_texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_QueryTexture(m_texture, NULL, NULL, &m_rect.w, &m_rect.h);
 }
 
