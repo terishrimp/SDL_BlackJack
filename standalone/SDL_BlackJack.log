@@ -1,0 +1,16 @@
+﻿  Card.cpp
+  Dealer.cpp
+  Deck.cpp
+  Game.cpp
+C:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Game.cpp(41,88): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+C:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Game.cpp(41,67): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+  Helper.cpp
+  Player.cpp
+  TextTexture.cpp
+  User.cpp
+  Main.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 397 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  SDL_BlackJack.vcxproj -> C:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Release\SDL_BlackJack.exe
