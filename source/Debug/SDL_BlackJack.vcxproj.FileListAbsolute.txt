@@ -1,2 +1,3 @@
 C:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Debug\SDL_BlackJack.exe
 C:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Debug\SDL_BlackJack.pdb
+F:\Users\Terence\Documents\School\Winter 2021\VGP122 - Programming Fundamentals 1\Assignments\Assignment 3\SDL_BlackJack\Debug\SDL_BlackJack.exe

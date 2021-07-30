@@ -88,12 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SDL2_ttf-2.0.15\VisualC\external\include;C:\SDL2_image-2.0.5\VisualC\external\include;C:\SDL2-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\SDL2_ttf-2.0.15\VisualC\external\include;F:\SDL2_image-2.0.5\VisualC\external\include;F:\SDL2-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SDL2_ttf-2.0.15\VisualC\external\lib\x86;C:\SDL2_image-2.0.5\VisualC\external\lib\x86;C:\SDL2-2.0.12\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>F:\SDL2_ttf-2.0.15\VisualC\external\lib\x86;F:\SDL2_image-2.0.5\VisualC\external\lib\x86;F:\SDL2-2.0.12\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sdl2.lib;sdl2main.lib;sdl2_mixer.lib;sdl2_image.lib;sdl2_ttf.lib;libfreetype-6.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -122,10 +122,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>F:\SDL2_ttf-2.0.15\VisualC\external\include;F:\SDL2-2.0.12\include;F:\SDL2_image-2.0.5\VisualC\external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>F:\SDL2_image-2.0.5\VisualC\external\lib\x64;F:\SDL2_ttf-2.0.15\VisualC\external\lib\x64;F:\SDL2-2.0.12\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sdl2.lib;sdl2main.lib;sdl2_mixer.lib;sdl2_image.lib;sdl2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
